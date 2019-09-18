@@ -6,9 +6,15 @@
 Welcome to falibrary's documentation!
 =====================================
 
+`Falibrary` is a Falcon_ add-ons for API specification and validation.
+
+.. _Falcon: https://github.com/falconry/falcon
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+
+   doc
 
 
 
