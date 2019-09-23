@@ -1,6 +1,6 @@
 class Config:
     def __init__(self):
-        self.NETLOC = 'apidoc'  #: netloc for API document page
+        self.PATH = 'apidoc'  #: path for API document page
         self.TEMPLATE_FOLDER = 'templates'
         self.FILENAME = 'openapi.json'
         self.OPENAPI_VERSION = '3.0.2'  #: OpenAPI version
