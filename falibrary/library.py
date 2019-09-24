@@ -18,7 +18,7 @@ class Falibrary:
         for key, value in kwargs.items():
             setattr(self.config, key.upper(), value)
 
-    def validate(self, query=None, data=None, response=None, x=[]):
+    def validate(self, query=None, data=None, resp=None, x=[]):
         """
         validate query, JSON data, and response according to
         ``pydantic.BaseModel``
@@ -30,12 +30,12 @@ class Falibrary:
         """
         def decorator_validation(func):
             @wraps(func)
-            def validation(self, req, resp, *args, **kwargs):
+            def validation(self, _req, _resp, *args, **kwargs):
                 try:
                     if query:
-                        setattr(req.context, 'query', query(**req.params))
+                        setattr(_req.context, 'query', query(**_req.params))
                     if data:
-                        setattr(req.context, 'data', data(**req.media))
+                        setattr(_req.context, 'data', data(**_req.media))
                 except ValidationError as err:
                     raise falcon.HTTPUnprocessableEntity(
                         'Schema failed validation',
@@ -44,15 +44,15 @@ class Falibrary:
                 except Exception:
                     raise
 
-                result = func(self, req, resp, *args, **kwargs)
-                if response:
-                    resp.media = result.dict()
+                response = func(self, _req, _resp, *args, **kwargs)
+                if resp:
+                    _resp.media = response.dict()
 
-                return result
+                return response
 
             # register ``pydantic.BaseModel``
             for name, model in zip(
-                ('query', 'data', 'response'), (query, data, response)
+                ('query', 'data', 'resp'), (query, data, resp)
             ):
                 if model:
                     assert issubclass(model, BaseModel)
