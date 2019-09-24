@@ -4,12 +4,13 @@ from pydantic import ValidationError, BaseModel
 import falcon
 
 from falibrary.config import default_config
+from falibrary.route import OpenAPI, RedocPage
 
 
 class Falibrary:
     """
     :param app: Falcon instance
-    :param \*\*kwargs: key-value for config
+    :param kwargs: key-value for config
     """
 
     def __init__(self, app, **kwargs):
@@ -20,6 +21,7 @@ class Falibrary:
             setattr(self.config, key.upper(), value)
 
         self.STATUS = re.compile(r'(?P<code>^\d{3}) (?P<msg>[\w ]+$)')
+        self._register_route()
 
     def validate(self, query=None, data=None, resp=None, x=[]):
         """
@@ -71,3 +73,25 @@ class Falibrary:
 
             return validation
         return decorator_validation
+
+    def _register_route(self):
+        """
+        register doc page and OpenAPI spec file
+        """
+        self.app.add_route(
+            f'/{self.config.PATH}',
+            RedocPage(self.config)
+        )
+        self.app.add_route(
+            f'/{self.config.PATH}/{self.config.FILENAME}',
+            OpenAPI(self)
+        )
+
+    @property
+    def spec(self):
+        if not hasattr(self, '_spec'):
+            self._generate_spec()
+        return self._spec
+
+    def _generate_spec(self):
+        self._spec = None
