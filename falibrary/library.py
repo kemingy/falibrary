@@ -1,3 +1,4 @@
+import re
 from functools import wraps
 from pydantic import ValidationError, BaseModel
 import falcon
@@ -17,6 +18,8 @@ class Falibrary:
         self.config = default_config
         for key, value in kwargs.items():
             setattr(self.config, key.upper(), value)
+
+        self.STATUS = re.compile(r'(?P<code>^\d{3}) (?P<msg>[\w ]+$)')
 
     def validate(self, query=None, data=None, resp=None, x=[]):
         """
@@ -62,9 +65,9 @@ class Falibrary:
             # handle exceptions
             code_msg = {}
             for exception in x:
-                # assert getattr(falcon.status_codes, exception), 'Unknown HTTP Status'
-                code, msg = exception.split(' ', 1)
-                code_msg[code] = msg
+                match = self.STATUS.match(exception)
+                assert match
+                code_msg[match.group('code')] = match.group('msg')
 
             return validation
         return decorator_validation
