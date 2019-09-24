@@ -34,7 +34,7 @@ class Data(BaseModel):
 
 
 class Classification():
-    @api.validate(query=Query, data=Data, response=Response, x=[falcon.HTTP_403])
+    @api.validate(query=Query, data=Data, resp=Response, x=[falcon.HTTP_403])
     def on_post(self, req, resp, source, target):
         print(f'{source} => {target}')
         print(req.context.query)
