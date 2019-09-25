@@ -9,7 +9,7 @@ Provide OpenAPI document and validation for flask service.
 
 Mainly built for Machine Learning Model services.
 
-If you're using Flask, check my another Python library [Flaskerk]().
+If you're using Flask, check my another Python library [Flaskerk](https://github.com/kemingy/flaskerk).
 
 ## Quick Start
 
