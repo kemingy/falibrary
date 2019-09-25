@@ -1,10 +1,11 @@
 import re
-from functools import wraps
+from functools import wraps, partial
 from pydantic import ValidationError, BaseModel
 import falcon
 
 from falibrary.config import default_config
 from falibrary.route import OpenAPI, RedocPage
+from falibrary.utils import find_routes, parse_path
 
 
 class Falibrary:
@@ -71,6 +72,9 @@ class Falibrary:
                 assert match
                 code_msg[match.group('code')] = match.group('msg')
 
+            if code_msg:
+                validation.x = code_msg
+
             return validation
         return decorator_validation
 
@@ -78,12 +82,13 @@ class Falibrary:
         """
         register doc page and OpenAPI spec file
         """
+        self.config.SPEC_URL = f'/{self.config.PATH}/{self.config.FILENAME}'
         self.app.add_route(
             f'/{self.config.PATH}',
             RedocPage(self.config)
         )
         self.app.add_route(
-            f'/{self.config.PATH}/{self.config.FILENAME}',
+            self.config.SPEC_URL,
             OpenAPI(self)
         )
 
@@ -94,4 +99,98 @@ class Falibrary:
         return self._spec
 
     def _generate_spec(self):
-        self._spec = None
+        routes = {}
+        for route in find_routes(self.app._router._roots):
+            path, parameters = parse_path(route.uri_template)
+            routes[path] = {}
+            for method, func in route.method_map.items():
+                if isinstance(func, partial):
+                    # ignore exception handlers
+                    continue
+
+                name = route.resource.__class__.__name__
+                spec = {
+                    'summary': name,
+                    'operationID': name + '__' + method.lower(),
+                }
+
+                if hasattr(func, 'query'):
+                    spec['requestBody'] = {
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    '$ref': f'#/components/schemas/{func.data}'
+                                }
+                            }
+                        }
+                    }
+
+                if hasattr(func, 'query'):
+                    parameters.append({
+                        'name': func.query,
+                        'in': 'query',
+                        'required': True,
+                        'schema': {
+                            '$ref': f'#/components/schemas/{func.query}',
+                        }
+                    })
+                spec['parameters'] = parameters
+
+                if hasattr(func, 'resp'):
+                    spec['responses'] = {
+                        '200': {
+                            'description': 'Successful Response',
+                            'content': {
+                                'application/json': {
+                                    'schema': {
+                                        '$ref': f'#/components/schemas/{func.resp}'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                else:
+                    spec['responses'] = {
+                        '200': {
+                            'description': 'Successful Response',
+                        }
+                    }
+
+                if any([hasattr(func, schema)
+                        for schema in ('query', 'data', 'resp')]):
+                    spec['responses']['422'] = {
+                        'description': 'Validation Error',
+                    }
+
+                if hasattr(func, 'x'):
+                    for code, msg in func.x.items():
+                        spec['responses'][str(code)] = {
+                            'description': msg,
+                        }
+
+                routes[path][method.lower()] = spec
+
+        definitions = {}
+        for _, schema in self.models.items():
+            if 'definitions' in schema:
+                for key, value in schema['definitions'].items():
+                    definitions[key] = value
+                del schema['definitions']
+
+        data = {
+            'openapi': self.config.OPENAPI_VERSION,
+            'info': {
+                'title': self.config.TITLE,
+                'version': self.config.VERSION,
+            },
+            'paths': {
+                **routes
+            },
+            'components': {
+                'schemas': {
+                    name: schema for name, schema in self.models.items()
+                },
+            },
+            'definitions': definitions
+        }
+        self._spec = data
