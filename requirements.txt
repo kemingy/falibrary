@@ -1,1 +1,2 @@
 falcon>=2.0.0
+pydantic>=0.32.1
