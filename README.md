@@ -13,7 +13,7 @@ If you're using Flask, check my another Python library [Flaskerk](https://github
 
 ## Quick Start
 
-install with `pip install falibrary` (Python 3.6+)
+Install with `pip install falibrary` (Python 3.6+)
 
 ```py
 import falcon
@@ -23,9 +23,7 @@ from random import random
 
 from falibrary import Falibrary
 
-app = falcon.API()
 api = Falibrary(
-    app,
     title='Demo Service',
     version='0.1.2',
 )
@@ -56,9 +54,11 @@ class Classification():
             raise falcon.HTTPForbidden("Bad luck. You're fobidden.")
         return Response(label=int(10 * random()), score=random())
 
-app.add_route('/api/{source}/{target}', Classification())
-
 if __name__ == '__main__':
+    app = falcon.API()
+    app.add_route('/api/{source}/{target}', Classification())
+    api.register(app)
+
     httpd = simple_server.make_server('localhost', 8000, app)
     httpd.serve_forever()
 ```
