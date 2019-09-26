@@ -1,5 +1,6 @@
 # Falibrary
 
+[![GitHub Actions](https://github.com/kemingy/falibrary/workflows/Python%20package/badge.svg)](https://github.com/kemingy/falibrary/actions)
 ![GitHub](https://img.shields.io/github/license/kemingy/falibrary)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/falibrary)
 
