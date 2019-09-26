@@ -14,7 +14,7 @@ class Falibrary:
     :param kwargs: key-value for config
     """
 
-    def __init__(self, app, **kwargs):
+    def __init__(self, app=None, **kwargs):
         self.app = app
         self.models = {}
         self.config = default_config
@@ -22,6 +22,13 @@ class Falibrary:
             setattr(self.config, key.upper(), value)
 
         self.STATUS = re.compile(r'(?P<code>^\d{3}) (?P<msg>[\w ]+$)')
+        if self.app:
+            assert isinstance(app, falcon.API)
+            self._register_route()
+
+    def register(self, app):
+        assert isinstance(app, falcon.API)
+        self.app = app
         self._register_route()
 
     def validate(self, query=None, data=None, resp=None, x=[]):
