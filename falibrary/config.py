@@ -4,6 +4,8 @@ class Config:
         self.TEMPLATE_FOLDER = 'templates'
         self.FILENAME = 'openapi.json'
         self.OPENAPI_VERSION = '3.0.2'  #: OpenAPI version
+        self.UI = 'redoc'
+        self._SUPPORT_UI = {'redoc', 'swagger'}
 
         self.TITLE = 'Service API Document'  #: service name
         self.VERSION = '0.1'  #: service version

@@ -8,13 +8,15 @@ import re
 class RedocPage:
     def __init__(self, config):
         self.config = config
+        assert config.UI in config._SUPPORT_UI, f'{config.UI} is not supported'
+        self.ui_file = f'{config.UI}.html'
 
     def on_get(self, req, resp):
         resp.content_type = 'text/html'
         with open(os.path.join(os.getcwd(),
                                'falibrary',
                                self.config.TEMPLATE_FOLDER,
-                               'redoc.html'), 'r', encoding='utf-8') as f:
+                               self.ui_file), 'r', encoding='utf-8') as f:
             page = f.read()
 
         resp.body = re.sub('{{}}', self.config.SPEC_URL, page)
