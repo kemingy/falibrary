@@ -3,8 +3,6 @@ from falibrary import Falibrary
 
 
 def test_config():
-    # Temporary Unit test. Will spruce this up later.
-    # {k: val for k, val in self.__dict__.items() if not str(hex(id(val))) in str(val)}
     test = Falibrary(
         title='Machine Translation',
         version='1.2.0',
