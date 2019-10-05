@@ -11,7 +11,7 @@ from falibrary.utils import find_routes, parse_path
 class Falibrary:
     """
     :param app: Falcon instance
-    :param kwargs: key-value for config
+    :param kwargs: key-value for config, see :class:`falibrary.config.Config`
     """
 
     def __init__(self, app=None, **kwargs):
@@ -40,6 +40,25 @@ class Falibrary:
         :param data: Schema for JSON data
         :param response: Schema for JSON response
         :param x: List of :class:`falcon.status_codes`
+
+        .. code-block:: python
+
+            from falibrary imoprt Falibrary
+            from wsgiref import simple_server
+            from pydantic import BaseModel, Schema
+
+            class Query(BaseModel):
+                text: str
+                limit: int
+
+            api = Falibrary(title='demo', version='0.1')
+
+            class Demo:
+                @api.vaildate(query=Query, x=[falcon.HTTP_422])
+                def on_post(self, req, resp):
+                    print(req.content.query)
+                    raise falcon.HTTPUnprocessableEntity()
+
         """
         def decorator_validation(func):
             @wraps(func)
@@ -101,6 +120,9 @@ class Falibrary:
 
     @property
     def spec(self):
+        """
+        get the spec of API document
+        """
         if not hasattr(self, '_spec'):
             self._generate_spec()
         return self._spec
