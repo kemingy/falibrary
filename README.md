@@ -42,7 +42,7 @@ class Demo():
 
 if __name__ == '__main__':
     app = falcon.API()
-    app.add_route('/api/demo', Classification())
+    app.add_route('/api/demo', Demo())
     api.register(app)
 
     httpd = simple_server.make_server('localhost', 8000, app)

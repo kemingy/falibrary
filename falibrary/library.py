@@ -143,7 +143,7 @@ class Falibrary:
                     'operationID': name + '__' + method.lower(),
                 }
 
-                if hasattr(func, 'query'):
+                if hasattr(func, 'data'):
                     spec['requestBody'] = {
                         'content': {
                             'application/json': {
