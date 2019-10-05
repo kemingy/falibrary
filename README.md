@@ -16,6 +16,8 @@ If you're using Flask, check my another Python library [Flaskerk](https://github
 
 Install with `pip install falibrary` (Python 3.6+)
 
+### Basic example
+
 ```py
 import falcon
 from wsgiref import simple_server
@@ -31,6 +33,39 @@ api = Falibrary(
 
 class Query(BaseModel):
     text: str
+
+class Demo():
+    @api.validate(query=Query)
+    def on_post(self, req, resp):
+        print(req.context.query)
+        pass
+
+if __name__ == '__main__':
+    app = falcon.API()
+    app.add_route('/api/demo', Classification())
+    api.register(app)
+
+    httpd = simple_server.make_server('localhost', 8000, app)
+    httpd.serve_forever()
+```
+
+### More features
+
+```py
+import falcon
+from wsgiref import simple_server
+from pydantic import BaseModel, Schema
+from random import random
+
+from falibrary import Falibrary
+
+api = Falibrary(
+    title='Demo Service',
+    version='0.1.2',
+)
+
+class Query(BaseModel):
+    text: str = Schema()
 
 class Response(BaseModel):
     label: int
