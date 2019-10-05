@@ -7,7 +7,3 @@ def test_parse():
     path, param = parse_path(uri)
     assert path == uri , "Path fault"
     assert param == [] , "Param Fault"
-
-if __name__ == "__main__":
-    test_parse()
-    print("Utils pass")
