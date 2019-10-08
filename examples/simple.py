@@ -1,7 +1,6 @@
 import falcon
 from wsgiref import simple_server
-from pydantic import BaseModel, Schema
-from random import random
+from pydantic import BaseModel
 
 from falibrary import Falibrary
 
