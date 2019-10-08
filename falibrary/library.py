@@ -139,8 +139,8 @@ class Falibrary:
 
                 name = route.resource.__class__.__name__
                 spec = {
-                    'summary': name,
-                    'operationID': name + '__' + method.lower(),
+                    'summary': f'{name} <{method}>',
+                    'operationID': f'{name}__{method.lower()}',
                 }
 
                 if hasattr(func, 'data'):

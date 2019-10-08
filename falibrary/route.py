@@ -3,6 +3,7 @@ route for API document page and OpenAPI spec
 """
 import os
 import re
+import pkg_resources
 
 
 class RedocPage:
@@ -13,10 +14,11 @@ class RedocPage:
 
     def on_get(self, req, resp):
         resp.content_type = 'text/html'
-        with open(os.path.join(os.getcwd(),
-                               'falibrary',
-                               self.config.TEMPLATE_FOLDER,
-                               self.ui_file), 'r', encoding='utf-8') as f:
+        with open(os.path.join(
+                  pkg_resources.resource_filename(
+                      'falibrary',
+                      self.config.TEMPLATE_FOLDER),
+                  self.ui_file), 'r', encoding='utf-8') as f:
             page = f.read()
 
         resp.body = re.sub('{{}}', self.config.SPEC_URL, page)
