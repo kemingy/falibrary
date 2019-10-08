@@ -5,5 +5,5 @@ Document
 .. automodule:: falibrary.library
    :members:
 
-.. automodule:: falibrary.config
+.. autoclass:: falibrary.config.Config
    :members:
