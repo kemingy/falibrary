@@ -13,11 +13,18 @@ api = Falibrary(
 
 
 class Query(BaseModel):
-    text: str
+    text: str = Schema(
+        ...,
+        max_length=100,
+    )
 
 
 class Response(BaseModel):
-    label: int
+    label: int = Schema(
+        ...,
+        ge=0,
+        le=9,
+    )
     score: float = Schema(
         ...,
         gt=0,
