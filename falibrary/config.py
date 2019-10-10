@@ -10,6 +10,3 @@ class Config:
         self.TITLE = 'Service API Document'  #: service name
         self.VERSION = '0.1'  #: service version
         self.DOMAIN = None  #: service host domain
-
-
-default_config = Config()
