@@ -3,7 +3,7 @@ from functools import wraps, partial
 from pydantic import ValidationError, BaseModel
 import falcon
 
-from falibrary.config import default_config
+from falibrary.config import Config
 from falibrary.route import OpenAPI, RedocPage
 from falibrary.utils import find_routes, parse_path
 
@@ -17,7 +17,7 @@ class Falibrary:
     def __init__(self, app=None, **kwargs):
         self.app = app
         self.models = {}
-        self.config = default_config
+        self.config = Config()
         for key, value in kwargs.items():
             setattr(self.config, key.upper(), value)
 
