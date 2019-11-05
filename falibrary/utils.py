@@ -10,6 +10,13 @@ from falibrary.route import _doc_class_name
 ESCAPE = r'[\.\(\)\[\]\?\$\*\+\^\|]'
 ESCAPE_TO = r'\\\g<0>'
 EXTRACT = r'{\2}'
+# NOTE this regex is copied from werkzeug.routing._converter_args_re and
+# modified to support only int args
+INT_ARGS = re.compile(r'''
+    ((?P<name>\w+)\s*=\s*)?
+    (?P<value>\d+)\s*
+''', re.VERBOSE)
+INT_ARGS_NAMES = ('num_digits', 'min', 'max')
 
 
 def find_routes(root):
@@ -44,8 +51,17 @@ def parse_path(path):
                                            ('fname', 'cname', 'argstr')]
 
             if converter == 'int':
-                args = [int(arg.strip()) for arg in argstr.split(',')]
-                num_digits, minumum, maximum = args + [None] * (3 - len(args))
+                if argstr is None:
+                    argstr = ''
+
+                arg_values = [None, None, None]
+                for index, field in enumerate(INT_ARGS.finditer(argstr)):
+                    name, value = field.group('name'), field.group('value')
+                    if name:
+                        index = INT_ARGS_NAMES.index(name)
+                    arg_values[index] = value
+
+                num_digits, minumum, maximum = arg_values
                 schema = {
                     'type': 'integer',
                     'format': f'int{num_digits}' if num_digits else 'int32',

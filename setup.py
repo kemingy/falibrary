@@ -14,7 +14,7 @@ with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
 
 setup(
     name='falibrary',
-    version='0.3.3',
+    version='0.3.5',
     author='Keming Yang',
     author_email='kemingy94@gmail.com',
     description='',
