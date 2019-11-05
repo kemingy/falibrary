@@ -101,6 +101,9 @@ class Falibrary:
             if code_msg:
                 validation.x = code_msg
 
+            # register decorator
+            validation._decorator = self
+
             return validation
         return decorator_validation
 
@@ -135,6 +138,10 @@ class Falibrary:
             for method, func in route.method_map.items():
                 if isinstance(func, partial):
                     # ignore exception handlers
+                    continue
+
+                # bypass route decorated by others
+                if hasattr(func, '_decorator') and func._decorator != self:
                     continue
 
                 name = route.resource.__class__.__name__
