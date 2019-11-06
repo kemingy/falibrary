@@ -130,8 +130,22 @@ class Falibrary:
             self._generate_spec()
         return self._spec
 
+    def bypass(self, func):
+        if self.config.MODE == 'greedy':
+            return False
+        elif self.config.MODE == 'strict':
+            if getattr(func, '_decorator', None) == self:
+                return False
+            return True
+        else:
+            decorator = getattr(func, '_decorator', None)
+            if decorator and decorator != self:
+                return True
+            return False
+
     def _generate_spec(self):
         routes = {}
+        assert self.config.MODE in self.config._SUPPORT_MODE
         for route in find_routes(self.app._router._roots):
             path, parameters = parse_path(route.uri_template)
             routes[path] = {}
@@ -140,8 +154,7 @@ class Falibrary:
                     # ignore exception handlers
                     continue
 
-                # bypass route decorated by others
-                if hasattr(func, '_decorator') and func._decorator != self:
+                if self.bypass(func):
                     continue
 
                 name = route.resource.__class__.__name__
