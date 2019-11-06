@@ -9,8 +9,8 @@ class Query(BaseModel):
     text: str
 
 
-api = Falibrary()
-another = Falibrary(ui='swagger')
+api = Falibrary(mode='greedy')
+another = Falibrary(ui='swagger', mode='strict')
 
 
 class Ping:
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     app.add_route('/api/classify', Classify())
     app.add_route('/api/recommend', Recommend())
 
-    # api.register(app)
-    another.register(app)
+    api.register(app)
+    # another.register(app)
     httpd = simple_server.make_server('localhost', 8000, app)
     httpd.serve_forever()
