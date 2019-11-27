@@ -69,6 +69,13 @@ Changes you need to make:
 
 After that, this library will help you validate the incoming request and provide API document in `/apidoc`.
 
+| Parameters in `Falibrary.validate` | Corresponding parameters in `falcon` |
+| ------------- | ------------- |
+| `query` | `req.context.query` |
+| `data` | `req.context.data` |
+| `resp` | \ |
+| `x` | \ |
+
 For more details, check the [document](https://falibrary.readthedocs.io/en/latest/).
 
 ### More features
