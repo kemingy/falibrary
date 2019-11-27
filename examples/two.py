@@ -25,9 +25,10 @@ class Classify:
 
 
 class Recommend:
-    @another.validate()
+    @another.validate(x=[falcon.HTTP_201])
     def on_post(self, req, resp):
         resp.media = {'result': []}
+        resp.status = falcon.HTTP_201
 
 
 if __name__ == "__main__":
