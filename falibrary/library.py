@@ -199,6 +199,16 @@ class Falibrary:
                     })
                 spec['parameters'] = parameters
 
+                spec['responses'] = {}
+                has_2xx = False
+                if hasattr(func, 'x'):
+                    for code, msg in func.x.items():
+                        if code.startswith('2'):
+                            has_2xx = True
+                        spec['responses'][code] = {
+                            'description': msg,
+                        }
+
                 if hasattr(func, 'resp'):
                     spec['responses'] = {
                         '200': {
@@ -212,7 +222,7 @@ class Falibrary:
                             }
                         }
                     }
-                else:
+                elif not has_2xx:
                     spec['responses'] = {
                         '200': {
                             'description': 'Successful Response',
@@ -224,12 +234,6 @@ class Falibrary:
                     spec['responses']['422'] = {
                         'description': 'Validation Error',
                     }
-
-                if hasattr(func, 'x'):
-                    for code, msg in func.x.items():
-                        spec['responses'][str(code)] = {
-                            'description': msg,
-                        }
 
                 routes[path][method.lower()] = spec
 
