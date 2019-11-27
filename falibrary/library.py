@@ -10,7 +10,7 @@ from falibrary.utils import find_routes, parse_path
 
 class Falibrary:
     """
-    :param app: Falcon instance
+    :param app: Falcon instance [optional](you can register it later)
     :param kwargs: key-value for config, see :class:`falibrary.config.Config`
     """
 
@@ -27,9 +27,23 @@ class Falibrary:
             self._register_route()
 
     def register(self, app):
+        """
+        :param app: Falcon instance
+
+        register this library to Falcon application to get routes
+        """
         assert isinstance(app, falcon.API)
         self.app = app
         self._register_route()
+
+    def update_config(self, **kwargs):
+        """
+        update config
+
+        this can be done before generate the APIspecs
+        """
+        for key, value in kwargs.items():
+            setattr(self.config, key.upper(), value)
 
     def validate(self, query=None, data=None, resp=None, x=[]):
         """

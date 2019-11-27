@@ -12,6 +12,13 @@ Mainly built for Machine Learning Model services.
 
 If you're using Flask, check my another Python library [Flaskerk](https://github.com/kemingy/flaskerk).
 
+## Features
+
+* Generate API document with [Redoc UI](https://github.com/Redocly/redoc) or [Swagger UI](https://github.com/swagger-api/swagger-ui) :yum:
+* Less boilerplate code, annotations are really easy-to-use :sparkles:
+* Validate query, JSON data, response data with [pydantic](https://github.com/samuelcolvin/pydantic/) :wink:
+* Better HTTP exceptions for API services (default & customized) (JSON instead of HTML) :grimacing:
+
 ## Quick Start
 
 Install with `pip install falibrary` (Python 3.6+)
@@ -47,6 +54,22 @@ if __name__ == '__main__':
     httpd = simple_server.make_server('localhost', 8000, app)
     httpd.serve_forever()
 ```
+
+Changes you need to make:
+
+* create model with [pydantic](https://github.com/samuelcolvin/pydantic/)
+* decorate the route function with `Falibrary.validate()`
+* specify which part you need in `validate`
+  * `query` (args in url)
+    * [builtin converters](https://falcon.readthedocs.io/en/stable/api/routing.html#built-in-converters) (int, uuid, dt)
+  * `data` (JSON data from request)
+  * `resp` (response) this will be transformed to JSON data after validation
+  * `x` (HTTP Exceptions list)
+* register to Falcon application
+
+After that, this library will help you validate the incoming request and provide API document in `/apidoc`.
+
+For more details, check the [document](https://falibrary.readthedocs.io/en/latest/).
 
 ### More features
 
