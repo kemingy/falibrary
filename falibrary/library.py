@@ -210,24 +210,18 @@ class Falibrary:
                         }
 
                 if hasattr(func, 'resp'):
-                    spec['responses'] = {
-                        '200': {
-                            'description': 'Successful Response',
-                            'content': {
-                                'application/json': {
-                                    'schema': {
-                                        '$ref': f'#/components/schemas/{func.resp}'
-                                    }
+                    spec['responses']['200']: {
+                        'description': 'Successful Response',
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    '$ref': f'#/components/schemas/{func.resp}'
                                 }
                             }
-                        }
+                        },
                     }
                 elif not has_2xx:
-                    spec['responses'] = {
-                        '200': {
-                            'description': 'Successful Response',
-                        }
-                    }
+                    spec['responses']['200'] = {'description': 'Successful Response'}
 
                 if any([hasattr(func, schema)
                         for schema in ('query', 'data', 'resp')]):
