@@ -210,18 +210,18 @@ class Falibrary:
                     })
                 spec['parameters'] = params
 
-                spec['responses'] = {}
+                responses = {}
                 has_2xx = False
                 if hasattr(func, 'x'):
                     for code, msg in func.x.items():
                         if code.startswith('2'):
                             has_2xx = True
-                        spec['responses'][code] = {
+                        responses[code] = {
                             'description': msg,
                         }
 
                 if hasattr(func, 'resp'):
-                    spec['responses']['200']: {
+                    responses['200'] = {
                         'description': 'Successful Response',
                         'content': {
                             'application/json': {
@@ -232,13 +232,15 @@ class Falibrary:
                         },
                     }
                 elif not has_2xx:
-                    spec['responses']['200'] = {'description': 'Successful Response'}
+                    responses['200'] = {'description': 'Successful Response'}
 
                 if any([hasattr(func, schema)
                         for schema in ('query', 'data', 'resp')]):
-                    spec['responses']['422'] = {
+                    responses['422'] = {
                         'description': 'Validation Error',
                     }
+
+                spec['responses'] = responses
 
                 routes[path][method.lower()] = spec
 
