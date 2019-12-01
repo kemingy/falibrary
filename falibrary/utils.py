@@ -2,6 +2,7 @@
 utils functions
 """
 import re
+from inspect import getdoc
 from falcon.routing.compiled import _FIELD_PATTERN
 
 from falibrary.route import _doc_class_name
@@ -33,6 +34,16 @@ def find_routes(root):
         find_node(route)
 
     return routes
+
+
+def get_summary_desc(func):
+    doc = getdoc(func)
+    if doc is None:
+        return None, None
+    doc = doc.split('\n\n', 1)
+    if len(doc) == 1:
+        return doc[0], None
+    return doc
 
 
 def parse_path(path):
