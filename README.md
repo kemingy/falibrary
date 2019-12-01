@@ -88,36 +88,65 @@ from random import random
 
 from falibrary import Falibrary
 
+
 api = Falibrary(
     title='Demo Service',
     version='0.1.2',
 )
 
+
 class Query(BaseModel):
-    text: str = Schema()
+    text: str = Schema(
+        ...,
+        max_length=100,
+    )
+
 
 class Response(BaseModel):
-    label: int
+    label: int = Schema(
+        ...,
+        ge=0,
+        le=9,
+    )
     score: float = Schema(
         ...,
         gt=0,
         lt=1,
     )
 
+
 class Data(BaseModel):
     uid: str
     limit: int
     vip: bool
 
+
 class Classification():
+    """
+    classification demo
+    """
+    def on_get(self, req, resp, source, target):
+        """
+        get info
+
+        test information with `source` and `target`
+        """
+        resp.media = {'msg': f'hello from {source} to {target}'}
+
     @api.validate(query=Query, data=Data, resp=Response, x=[falcon.HTTP_403])
     def on_post(self, req, resp, source, target):
+        """
+        post demo
+
+        demo for `query`, `data`, `resp`, `x`
+        """
         print(f'{source} => {target}')
         print(req.context.query)
         print(req.context.data)
         if random() < 0.5:
             raise falcon.HTTPForbidden("Bad luck. You're fobidden.")
         return Response(label=int(10 * random()), score=random())
+
 
 if __name__ == '__main__':
     app = falcon.API()
@@ -126,6 +155,7 @@ if __name__ == '__main__':
 
     httpd = simple_server.make_server('localhost', 8000, app)
     httpd.serve_forever()
+
 ```
 
 Try it with `http POST ':8000/api/zh/en?text=hello' uid=0b01001001 limit=5 vip=true`.
