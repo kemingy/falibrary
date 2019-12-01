@@ -39,6 +39,9 @@ class Data(BaseModel):
 
 
 class Classification():
+    def on_get(self, req, resp, source, target):
+        resp.media = {'msg': f'hello from {source} to {target}'}
+
     @api.validate(query=Query, data=Data, resp=Response, x=[falcon.HTTP_403])
     def on_post(self, req, resp, source, target):
         print(f'{source} => {target}')
