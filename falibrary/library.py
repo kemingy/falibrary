@@ -188,8 +188,9 @@ class Falibrary:
                         }
                     }
 
+                params = parameters[:]
                 if hasattr(func, 'query'):
-                    parameters.append({
+                    params.append({
                         'name': func.query,
                         'in': 'query',
                         'required': True,
@@ -197,7 +198,7 @@ class Falibrary:
                             '$ref': f'#/components/schemas/{func.query}',
                         }
                     })
-                spec['parameters'] = parameters
+                spec['parameters'] = params
 
                 spec['responses'] = {}
                 has_2xx = False
