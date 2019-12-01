@@ -1,11 +1,12 @@
 import re
+import inspect
 from functools import wraps, partial
 from pydantic import ValidationError, BaseModel
 import falcon
 
 from falibrary.config import Config
 from falibrary.route import OpenAPI, RedocPage
-from falibrary.utils import find_routes, parse_path
+from falibrary.utils import find_routes, parse_path, get_summary_desc
 
 
 class Falibrary:
@@ -159,6 +160,7 @@ class Falibrary:
 
     def _generate_spec(self):
         routes = {}
+        tags = {}
         assert self.config.MODE in self.config._SUPPORT_MODE
         for route in find_routes(self.app._router._roots):
             path, parameters = parse_path(route.uri_template)
@@ -172,9 +174,17 @@ class Falibrary:
                     continue
 
                 name = route.resource.__class__.__name__
+                if name not in tags:
+                    tags[name] = {
+                        'name': name.lower(),
+                        'description': inspect.getdoc(route.resource) or '',
+                    }
+                summary, desc = get_summary_desc(func)
                 spec = {
-                    'summary': f'{name} <{method}>',
+                    'summary': summary or f'{name} <{method}>',
                     'operationID': f'{name}__{method.lower()}',
+                    'description': desc or '',
+                    'tags': [name.lower()],
                 }
 
                 if hasattr(func, 'data'):
@@ -188,8 +198,9 @@ class Falibrary:
                         }
                     }
 
+                params = parameters[:]
                 if hasattr(func, 'query'):
-                    parameters.append({
+                    params.append({
                         'name': func.query,
                         'in': 'query',
                         'required': True,
@@ -197,7 +208,7 @@ class Falibrary:
                             '$ref': f'#/components/schemas/{func.query}',
                         }
                     })
-                spec['parameters'] = parameters
+                spec['parameters'] = params
 
                 spec['responses'] = {}
                 has_2xx = False
@@ -244,6 +255,7 @@ class Falibrary:
                 'title': self.config.TITLE,
                 'version': self.config.VERSION,
             },
+            'tags': list(tags.values()),
             'paths': {
                 **routes
             },
