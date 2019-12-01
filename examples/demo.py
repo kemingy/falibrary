@@ -39,11 +39,24 @@ class Data(BaseModel):
 
 
 class Classification():
+    """
+    classification demo
+    """
     def on_get(self, req, resp, source, target):
+        """
+        get info
+
+        test information with `source` and `target`
+        """
         resp.media = {'msg': f'hello from {source} to {target}'}
 
     @api.validate(query=Query, data=Data, resp=Response, x=[falcon.HTTP_403])
     def on_post(self, req, resp, source, target):
+        """
+        post demo
+
+        demo for `query`, `data`, `resp`, `x`
+        """
         print(f'{source} => {target}')
         print(req.context.query)
         print(req.context.data)
