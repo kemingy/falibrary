@@ -32,4 +32,4 @@ class OpenAPI:
         resp.media = self.api.spec
 
 
-_doc_class_name = [x.__name__ for x in (RedocPage, OpenAPI)]
+_doc_class_name = [x.__name__ for x in (DocPage, OpenAPI)]
