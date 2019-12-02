@@ -5,7 +5,7 @@ from pydantic import ValidationError, BaseModel
 import falcon
 
 from falibrary.config import Config
-from falibrary.route import OpenAPI, RedocPage
+from falibrary.route import OpenAPI, DocPage
 from falibrary.utils import find_routes, parse_path, get_summary_desc
 
 
@@ -81,8 +81,9 @@ class Falibrary:
                 try:
                     if query:
                         setattr(_req.context, 'query', query(**_req.params))
+                    media = _req.media or {}
                     if data:
-                        setattr(_req.context, 'data', data(**_req.media))
+                        setattr(_req.context, 'data', data(**media))
                 except ValidationError as err:
                     raise falcon.HTTPUnprocessableEntity(
                         'Schema failed validation',
@@ -129,7 +130,7 @@ class Falibrary:
         self.config.SPEC_URL = f'/{self.config.PATH}/{self.config.FILENAME}'
         self.app.add_route(
             f'/{self.config.PATH}',
-            RedocPage(self.config)
+            DocPage(self.config)
         )
         self.app.add_route(
             self.config.SPEC_URL,
