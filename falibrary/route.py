@@ -6,7 +6,7 @@ import re
 import pkg_resources
 
 
-class RedocPage:
+class DocPage:
     def __init__(self, config):
         self.config = config
         assert config.UI in config._SUPPORT_UI, f'{config.UI} is not supported'
