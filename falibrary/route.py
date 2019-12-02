@@ -6,7 +6,7 @@ import re
 import pkg_resources
 
 
-class RedocPage:
+class DocPage:
     def __init__(self, config):
         self.config = config
         assert config.UI in config._SUPPORT_UI, f'{config.UI} is not supported'
@@ -32,4 +32,4 @@ class OpenAPI:
         resp.media = self.api.spec
 
 
-_doc_class_name = [x.__name__ for x in (RedocPage, OpenAPI)]
+_doc_class_name = [x.__name__ for x in (DocPage, OpenAPI)]

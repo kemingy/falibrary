@@ -83,7 +83,7 @@ For more details, check the [document](https://falibrary.readthedocs.io/en/lates
 ```py
 import falcon
 from wsgiref import simple_server
-from pydantic import BaseModel, Schema
+from pydantic import BaseModel, Field
 from random import random
 
 from falibrary import Falibrary
@@ -96,19 +96,19 @@ api = Falibrary(
 
 
 class Query(BaseModel):
-    text: str = Schema(
+    text: str = Field(
         ...,
         max_length=100,
     )
 
 
 class Response(BaseModel):
-    label: int = Schema(
+    label: int = Field(
         ...,
         ge=0,
         le=9,
     )
-    score: float = Schema(
+    score: float = Field(
         ...,
         gt=0,
         lt=1,
@@ -127,9 +127,9 @@ class Classification():
     """
     def on_get(self, req, resp, source, target):
         """
-        get info
+        API summary
 
-        test information with `source` and `target`
+        description here: test information with `source` and `target`
         """
         resp.media = {'msg': f'hello from {source} to {target}'}
 
@@ -155,7 +155,6 @@ if __name__ == '__main__':
 
     httpd = simple_server.make_server('localhost', 8000, app)
     httpd.serve_forever()
-
 ```
 
 Try it with `http POST ':8000/api/zh/en?text=hello' uid=0b01001001 limit=5 vip=true`.
