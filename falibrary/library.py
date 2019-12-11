@@ -46,7 +46,7 @@ class Falibrary:
         for key, value in kwargs.items():
             setattr(self.config, key.upper(), value)
 
-    def validate(self, query=None, data=None, resp=None, x=[]):
+    def validate(self, query=None, data=None, resp=None, x=[], tags=[]):
         """
         validate query, JSON data, and response according to
         ``pydantic.BaseModel``
@@ -55,6 +55,7 @@ class Falibrary:
         :param data: Schema for JSON data
         :param response: Schema for JSON response
         :param x: List of :class:`falcon.status_codes`
+        :param tags: List of string for route tags (default: Class name)
 
         .. code-block:: python
 
@@ -117,6 +118,9 @@ class Falibrary:
             if code_msg:
                 validation.x = code_msg
 
+            if tags:
+                validation.tags = tags
+
             # register decorator
             validation._decorator = self
 
@@ -175,17 +179,19 @@ class Falibrary:
                     continue
 
                 name = route.resource.__class__.__name__
-                if name not in tags:
-                    tags[name] = {
-                        'name': name.lower(),
-                        'description': inspect.getdoc(route.resource) or '',
-                    }
+                func_tags = getattr(func, 'tags', None) or [name]
+                for tag in func_tags:
+                    if tag not in tags:
+                        tags[tag] = {
+                            'name': tag,
+                            'description': inspect.getdoc(route.resource) or '',
+                        }
                 summary, desc = get_summary_desc(func)
                 spec = {
                     'summary': summary or f'{name} <{method}>',
                     'operationID': f'{name}__{method.lower()}',
                     'description': desc or '',
-                    'tags': [name.lower()],
+                    'tags': func_tags,
                 }
 
                 if hasattr(func, 'data'):
