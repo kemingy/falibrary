@@ -42,6 +42,7 @@ class Classification():
     """
     classification demo
     """
+    @api.validate(tags=['demo'])
     def on_get(self, req, resp, source, target):
         """
         API summary

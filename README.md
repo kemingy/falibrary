@@ -65,6 +65,7 @@ Changes you need to make:
   * `data` (JSON data from request)
   * `resp` (response) this will be transformed to JSON data after validation
   * `x` (HTTP Exceptions list)
+  * `tags` (tags for this route)
 * register to Falcon application
 
 After that, this library will help you validate the incoming request and provide API document in `/apidoc`.
@@ -75,6 +76,7 @@ After that, this library will help you validate the incoming request and provide
 | `data` | `req.context.data` |
 | `resp` | \ |
 | `x` | \ |
+| `tags` | \ |
 
 For more details, check the [document](https://falibrary.readthedocs.io/en/latest/).
 
@@ -125,6 +127,7 @@ class Classification():
     """
     classification demo
     """
+    @api.validate(tags=['demo'])
     def on_get(self, req, resp, source, target):
         """
         API summary
