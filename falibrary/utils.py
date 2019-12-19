@@ -66,8 +66,8 @@ def parse_path(path):
                     argstr = ''
 
                 arg_values = [None, None, None]
-                for index, field in enumerate(INT_ARGS.finditer(argstr)):
-                    name, value = field.group('name'), field.group('value')
+                for index, match in enumerate(INT_ARGS.finditer(argstr)):
+                    name, value = match.group('name'), match.group('value')
                     if name:
                         index = INT_ARGS_NAMES.index(name)
                     arg_values[index] = value
