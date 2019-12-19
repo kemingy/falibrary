@@ -18,7 +18,6 @@ class Demo():
     @api.validate(query=Query)
     def on_post(self, req, resp):
         print(req.context.query)
-        pass
 
 
 if __name__ == '__main__':
