@@ -3,6 +3,7 @@
 [![GitHub Actions](https://github.com/kemingy/falibrary/workflows/Python%20package/badge.svg)](https://github.com/kemingy/falibrary/actions)
 ![GitHub](https://img.shields.io/github/license/kemingy/falibrary)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/falibrary)
+[![Documentation Status](https://readthedocs.org/projects/falibrary/badge/?version=latest)](https://falibrary.readthedocs.io/en/latest/?badge=latest)
 
 Falcon add-on for API specification and validation.
 
@@ -11,6 +12,12 @@ Provide OpenAPI document and validation for flask service.
 Mainly built for Machine Learning Model services.
 
 If you're using Flask, check my another Python library [Flaskerk](https://github.com/kemingy/flaskerk).
+
+**Attention**
+
+I just build another library [SpecTree](https://github.com/0b01001001/spectree) that supports all the features falibrary has with better interface. Give it a try!
+
+This library may be archived.
 
 ## Features
 
