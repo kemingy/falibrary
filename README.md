@@ -13,11 +13,9 @@ Mainly built for Machine Learning Model services.
 
 If you're using Flask, check my another Python library [Flaskerk](https://github.com/kemingy/flaskerk).
 
-**Attention**
+## Attention
 
-I just build another library [SpecTree](https://github.com/0b01001001/spectree) that supports all the features falibrary has with better interface. Give it a try!
-
-This library may be archived.
+**I've created a new library named [SpecTree](https://github.com/0b01001001/spectree). It supports all the features of Falibrary, but with a better interface. Give it a try! This library may be archived in the future.**
 
 ## Features
 
