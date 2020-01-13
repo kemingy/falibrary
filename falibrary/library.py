@@ -78,7 +78,7 @@ class Falibrary:
         """
         def decorator_validation(func):
             @wraps(func)
-            def validation(self, _req, _resp, *args, **kwargs):
+            def validation(_self, _req, _resp, *args, **kwargs):
                 try:
                     if query:
                         setattr(_req.context, 'query', query(**_req.params))
@@ -93,7 +93,7 @@ class Falibrary:
                 except Exception:
                     raise
 
-                response = func(self, _req, _resp, *args, **kwargs)
+                response = func(_self, _req, _resp, *args, **kwargs)
                 if resp:
                     _resp.media = response.dict()
 
